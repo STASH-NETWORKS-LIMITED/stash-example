@@ -34,6 +34,12 @@ http:
     - ^http://g\.cn http://www.google.com header # 重写请求头的域名
     - ^https?://www\.google\.cn https://www.google.com 302 # 直接返回一个 302 重定向的响应
     - ^https?://ad\.example - reject # 拒绝请求
+  script:
+    - match: https://weather-data.apple.com/v2/weather/[\w-]+/-?[0-9]+\.[0-9]+/-?[0-9]+\.[0-9]+\?
+      name: weather-us-aqi
+      type: response # script type can be one of request / response
+      require-body: true
+      timeout: 10 # script timeout in second (optional)
 
 script:
   shortcuts:
@@ -428,71 +434,75 @@ proxy-groups:
 
 proxy-providers:
   provider1:
-    type: http
-    url: "url"
+    url: https://example.com
     interval: 3600
-    path: ./provider1.yaml
     health-check:
       enable: true
       interval: 600
       url: http://www.gstatic.com/generate_204
-  test:
-    type: file
-    path: /test.yaml
-    health-check:
-      enable: true
-      interval: 36000
-      url: http://www.gstatic.com/generate_204
 
 rule-providers:
   apple-proxy:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/Apple-proxy.yaml"
-    path: ./ruleset/Apple-proxy.yaml
     interval: 3600
 
   apple-direct:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/Apple-direct.yaml"
-    path: ./ruleset/Apple-direct.yaml
     interval: 3600
 
   cn:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/CN.yaml"
-    path: ./ruleset/CN.yaml
     interval: 3600
 
   ad-keyword:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/common-ad-keyword.yaml"
-    path: ./ruleset/common-ad-keyword.yaml
     interval: 3600
 
   foreign:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/foreign.yaml"
-    path: ./ruleset/foreign.yaml
     interval: 3600
 
   telegram:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/App/social/Telegram.yaml"
-    path: ./ruleset/Telegram.yaml
     interval: 3600
 
   lan:
-    type: http
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/LAN.yaml"
-    path: ./ruleset/LAN.yaml
     interval: 3600
+
+script-providers:
+  weather-us-aqi:
+    url: https://raw.githubusercontent.com/Hackl0us/SS-Rule-Snippet/master/Scripts/Surge/weather_aqi_us/iOS15_Weather_AQI_US.js
+    interval: 3600
+  rewrite:
+    content: > # JavaScript code for develop, highly recommended to use url
+      $httpClient.get(
+        {
+          url: "https://httpbin.org/anything",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: "{}",
+        },
+        function (error, response, body) {
+          if (error) {
+            console.log(error);
+            $done();
+            return;
+          }
+          console.log(response.status);
+          console.log(JSON.stringify(response.headers));
+          console.log(body);
+          $done({ body });
+        }
+      );
 
 rules:
   - SCRIPT,quic,REJECT
