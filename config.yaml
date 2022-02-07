@@ -215,7 +215,7 @@ proxies:
     type: vmess
     server: server
     port: 443
-    uuid: uuid
+    uuid: d0529668-8835-11ec-a8a3-0242ac120002
     alterId: 32
     cipher: auto
     # udp: true
@@ -234,7 +234,7 @@ proxies:
     type: vmess
     server: server
     port: 443
-    uuid: uuid
+    uuid: d0529668-8835-11ec-a8a3-0242ac120002
     alterId: 32
     cipher: auto
     network: h2
@@ -249,7 +249,7 @@ proxies:
     type: vmess
     server: server
     port: 443
-    uuid: uuid
+    uuid: d0529668-8835-11ec-a8a3-0242ac120002
     alterId: 32
     cipher: auto
     # udp: true
@@ -267,7 +267,7 @@ proxies:
     server: server
     port: 443
     type: vmess
-    uuid: uuid
+    uuid: d0529668-8835-11ec-a8a3-0242ac120002
     alterId: 32
     cipher: auto
     network: grpc
@@ -375,7 +375,7 @@ proxy-groups:
     proxies:
       - ss1
       - ss2
-      - vmess1
+      - vmess
     url: "http://www.gstatic.com/generate_204"
     interval: 300
 
@@ -385,7 +385,7 @@ proxy-groups:
     proxies:
       - ss1
       - ss2
-      - vmess1
+      - vmess
     url: "http://www.gstatic.com/generate_204"
     interval: 300
 
@@ -395,7 +395,7 @@ proxy-groups:
     proxies:
       - ss1
       - ss2
-      - vmess1
+      - vmess
     url: "http://www.gstatic.com/generate_204"
     interval: 300
 
@@ -406,7 +406,7 @@ proxy-groups:
     proxies:
       - ss1
       - ss2
-      - vmess1
+      - vmess
       - auto
 
   # 基于 SSID 的策略，方便在特殊网络环境下使用特定的代理
@@ -434,7 +434,7 @@ proxy-groups:
 
 proxy-providers:
   provider1:
-    url: https://example.com
+    url: https://raw.githubusercontent.com/STASH-NETWORKS-LIMITED/stash-example/main/config.yaml
     interval: 3600
     health-check:
       enable: true
