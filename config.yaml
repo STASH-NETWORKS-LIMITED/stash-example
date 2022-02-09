@@ -363,6 +363,7 @@ proxy-groups:
   # 流量: clash <-> http <-> vmess <-> ss1 <-> ss2 <-> 互联网
   - name: "relay"
     type: relay
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png
     proxies:
       - http
       - vmess
