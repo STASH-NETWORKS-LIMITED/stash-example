@@ -34,15 +34,45 @@ http:
     - ^http://g\.cn http://www.google.com header # 重写请求头的域名
     - ^https?://www\.google\.cn https://www.google.com 302 # 直接返回一个 302 重定向的响应
     - ^https?://ad\.example - reject # 拒绝请求
+  # 使用 JavaScript 脚本改写 HTTP(S) 请求
   script:
     - match: https://weather-data.apple.com/v2/weather/[\w-]+/-?[0-9]+\.[0-9]+/-?[0-9]+\.[0-9]+\?
-      name: weather-us-aqi
-      type: response # script type can be one of request / response
-      require-body: true
+      name: weather-us-aqi # 引用script-providers中的脚本
+      type: response # 脚本类型：request / response
+      require-body: true # 如果需要 request / response body，请设置为 true
       timeout: 10 # script timeout in second (optional)
 
+script-providers:
+  weather-us-aqi:
+    # 远程资源模式
+    url: https://raw.githubusercontent.com/STASH-NETWORKS-LIMITED/stash-example/main/script/iOS15_Weather_AQI_Standard.js
+    interval: 86400
+  rewrite:
+    # inline模式，仅推荐作为开发使用
+    content: >
+      $httpClient.get(
+        {
+          url: "https://httpbin.org/anything",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: "{}",
+        },
+        function (error, response, body) {
+          if (error) {
+            console.log(error);
+            $done();
+            return;
+          }
+          console.log(response.status);
+          console.log(JSON.stringify(response.headers));
+          console.log(body);
+          $done({ body });
+        }
+      );
+
 script:
-  shortcuts:
+  shortcuts: # 使用 Python 脚本编写自定义规则
     # 4483 与 9305 为 BiliBili 的 QUIC CDN
     quic: network == 'udp' and (dst_port == 443 or dst_port == 4483 or dst_port == 9305) # 可以在 rule 中引用
 
@@ -477,33 +507,6 @@ rule-providers:
     behavior: classical
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/LAN.yaml"
     interval: 3600
-
-script-providers:
-  weather-us-aqi:
-    url: https://raw.githubusercontent.com/Hackl0us/SS-Rule-Snippet/master/Scripts/Surge/weather_aqi_us/iOS15_Weather_AQI_US.js
-    interval: 3600
-  rewrite:
-    content: > # JavaScript code for develop, highly recommended to use url
-      $httpClient.get(
-        {
-          url: "https://httpbin.org/anything",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: "{}",
-        },
-        function (error, response, body) {
-          if (error) {
-            console.log(error);
-            $done();
-            return;
-          }
-          console.log(response.status);
-          console.log(JSON.stringify(response.headers));
-          console.log(body);
-          $done({ body });
-        }
-      );
 
 rules:
   - SCRIPT,quic,REJECT
