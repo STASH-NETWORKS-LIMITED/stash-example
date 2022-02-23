@@ -100,6 +100,7 @@ dns:
     # 不建议配置超过 2 个 DNS 服务器，会增加系统功耗
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
+    - quic://dns.adguard.com:784
     - system # 使用 iOS 系统 DNS
 
   # 在以下列表的域名将不会被解析为 fake ip，这些域名相关的解析请求将会返回它们真实的 IP 地址
