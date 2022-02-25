@@ -7,7 +7,7 @@ mode: rule
 # Clash 默认将日志输出至 STDOUT
 # 设置日志输出级别 (默认级别：silent，即不输出任何内容，以避免因日志内容过大而导致程序内存溢出）。
 # 5 个级别：silent / info / warning / error / debug。级别越高日志输出量越大，越倾向于调试，若需要请自行开启。
-log-level: silent
+log-level: info
 
 # 改写与 MitM 相关（Beta）
 http:
@@ -475,49 +475,36 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
 
 rule-providers:
-  apple-proxy:
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/Apple-proxy.yaml"
-    interval: 3600
+  proxy-domain:
+    behavior: domain # 使用 domain 类规则集，可以使匹配更高效
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    interval: 86400
+
+  proxy-domain-text:
+    behavior: domain-text # 推荐使用 text 格式
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/proxy.txt
+    interval: 86400
+
+  lan-cidr:
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    interval: 86400
+
+  ip-cidr-text:
+    behavior: ipcidr-text
+    url: https://cdn.jsdelivr.net/gh/17mon/china_ip_list@master/china_ip_list.txt
+    interval: 86400
 
   apple-direct:
-    behavior: classical
+    behavior: classical # 不推荐使用 classical 类规则集
     url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/Apple-direct.yaml"
-    interval: 3600
-
-  cn:
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/CN.yaml"
-    interval: 3600
-
-  ad-keyword:
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/common-ad-keyword.yaml"
-    interval: 3600
-
-  foreign:
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/foreign.yaml"
-    interval: 3600
-
-  telegram:
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/App/social/Telegram.yaml"
-    interval: 3600
-
-  lan:
-    behavior: classical
-    url: "https://cdn.jsdelivr.net/gh/Hackl0us/SS-Rule-Snippet@master/Rulesets/Clash/Basic/LAN.yaml"
     interval: 3600
 
 rules:
   - SCRIPT,quic,REJECT
-  - RULE-SET,apple-proxy,Proxy
+  - RULE-SET,proxy-domain,Proxy
   - RULE-SET,apple-direct,DIRECT
-  - RULE-SET,cn,DIRECT
-  - RULE-SET,ad-keyword,REJECT
-  - RULE-SET,foreign,Proxy
-  - RULE-SET,telegram,Proxy
-  - RULE-SET,lan,DIRECT
+  - RULE-SET,lan-cidr,DIRECT
+  - RULE-SET,ip-cidr-text,DIRECT
   - GEOIP,CN,DIRECT
   - MATCH,Proxy
