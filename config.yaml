@@ -103,6 +103,11 @@ dns:
     - quic://dns.adguard.com:784
     - system # 使用 iOS 系统 DNS
 
+  # 对部分域名使用单独的 DNS 服务器
+  nameserver-policy:
+    "www.baidu.com": 114.114.114.114
+    "+.internal.crop.com": system
+
   # 在以下列表的域名将不会被解析为 fake ip，这些域名相关的解析请求将会返回它们真实的 IP 地址
   fake-ip-filter:
     # 以下域名列表参考自 vernesong/OpenClash 项目，并由 Hackl0us 整理补充
@@ -361,7 +366,7 @@ proxies:
     port: 443
     up-speed: 100 # 上传带宽（单位：Mbps）
     down-speed: 100 # 下载带宽（单位：Mbps）
-    # auth: "" # string auth or bytes encoded in base64
+    # auth: "" # bytes encoded in base64
     # obfs: ""
     # obfs-protocol: "" # wechat-video or blank
     # udp: true
