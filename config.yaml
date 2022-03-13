@@ -342,6 +342,7 @@ proxies:
     port: 44046
     psk: yourpsk
     udp: true # 需要 v3 以上服务端
+    version: 3
     # obfs-opts:
     # mode: http # 或 tls
     # host: bing.com
