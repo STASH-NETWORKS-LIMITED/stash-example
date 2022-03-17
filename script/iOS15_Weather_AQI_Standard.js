@@ -48,7 +48,7 @@ function modifyWeatherResp(weatherRespBody, aqicnRespBody) {
 function getPrimaryPollutant(pollutant) {
   switch (pollutant) {
     case "co":
-      return "CO2";
+      return "CO";
     case "so2":
       return "SO2";
     case "no2":
