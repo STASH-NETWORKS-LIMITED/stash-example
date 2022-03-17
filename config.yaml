@@ -396,6 +396,27 @@ proxies:
     # protocol-param: "#"
     # udp: true
 
+  - name: "vless"
+    type: vless
+    server: server
+    port: 443
+    uuid: d0529668-8835-11ec-a8a3-0242ac120002
+    # flow: xtls-rprx-direct
+    # skip-cert-verify: true
+    # network: h2
+    # tls: true
+    # ws-opts:
+    #   path: /path
+    #   headers:
+    #     Host: v2ray.com
+    # grpc-opts:
+    #   grpc-service-name: "example"
+    # h2-opts:
+    #   host:
+    #     - http.example.com
+    #     - http-alt.example.com
+    #   path: /
+
 proxy-groups:
   # 代理的转发链, 在 proxies 中不应该包含 relay. 不支持 UDP.
   # 流量: clash <-> http <-> vmess <-> ss1 <-> ss2 <-> 互联网
