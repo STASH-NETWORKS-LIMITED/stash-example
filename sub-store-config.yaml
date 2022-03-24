@@ -1,0 +1,164 @@
+mode: Rule
+log-level: info
+proxy-groups:
+- name: PROXY
+  type: select
+  use:
+  - HongKong
+  - Japan
+  - Singapore
+  - USA
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Static.png
+  proxies: []
+- name: FINAL
+  type: select
+  proxies:
+  - PROXY
+  - DIRECT
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png
+- name: Apple
+  type: select
+  proxies:
+  - DIRECT
+  - PROXY
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png
+- name: Telegram
+  type: select
+  proxies:
+  - HK
+  - SG
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png
+  url: http://cp.cloudflare.com/generate_204
+- name: Google
+  type: select
+  proxies:
+  - HK
+  - SG
+  - JP
+  - US
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
+- name: Global Media
+  type: select
+  proxies:
+  - HK
+  - SG
+  - JP
+  - US
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+- name: HK
+  type: select
+  use:
+  - HongKong
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
+  proxies: []
+- name: JP
+  type: select
+  use:
+  - Japan
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
+  proxies: []
+- name: SG
+  type: select
+  use:
+  - Singapore
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
+  proxies: []
+- name: US
+  type: select
+  use:
+  - USA
+  icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
+  proxies: []
+proxy-providers:
+  HongKong:
+    type: http
+    url: https://sub.store/download/collection/HK?target=Clash
+    interval: 86400
+    path: ./proxies/HongKong.yaml
+    health-check:
+      enable: true
+      interval: 3600
+      url: http://www.gstatic.com/generate_204
+  Japan:
+    type: http
+    url: https://sub.store/download/collection/JP?target=Clash
+    interval: 86400
+    path: ./proxies/Japan.yaml
+    health-check:
+      enable: true
+      interval: 3600
+      url: http://www.gstatic.com/generate_204
+  Singapore:
+    type: http
+    url: https://sub.store/download/collection/SG?target=Clash
+    interval: 86400
+    path: ./proxies/Singapore.yaml
+    health-check:
+      enable: true
+      interval: 3600
+      url: http://www.gstatic.com/generate_204
+  USA:
+    type: http
+    url: https://sub.store/download/collection/US?target=Clash
+    interval: 86400
+    path: ./proxies/USA.yaml
+    health-check:
+      enable: true
+      interval: 3600
+      url: http://www.gstatic.com/generate_204
+rule-providers:
+  telegram:
+    type: http
+    behavior: classical
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/fantasticmao/clash-rules@main/telegramcidr.yaml
+    path: ./ruleset/telegram.yaml
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+  google:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Google/Google.yaml"
+    path: ./ruleset/google.yaml
+    interval: 86400
+  apple:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Apple/Apple.yaml"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+  global_media:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GlobalMedia/GlobalMedia.yaml"
+    path: ./ruleset/global_media.yaml
+    interval: 86400
+  advertising_domain:
+    behavior: classical
+    interval: 86400
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Advertising/Advertising_Domain.yaml
+  advertising:
+    behavior: classical
+    interval: 86400
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Advertising/Advertising.yaml
+rules:
+- RULE-SET,advertising,REJECT
+- DOMAIN,advertising_domain,REJECT
+- RULE-SET,apple,Apple
+- RULE-SET,telegram,Telegram
+- RULE-SET,google,Google
+- RULE-SET,cncidr,DIRECT
+- RULE-SET,lancidr,DIRECT,
+- RULE-SET,global_media,Global Media
+- GEOIP,CN,DIRECT
+- MATCH,FINAL
